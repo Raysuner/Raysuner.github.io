@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        background-color: rgba(0, 0, 0, 0.08);
+      }
+
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      li {
+        position: relative;
+        white-space: nowrap;
+      }
+
+      li:hover {
+        background-color: green;
+      }
+
+      ul.menu > li {
+        display: inline-block;
+      }
+
+      ul ul {
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+      }
+
+      ul.menu li:hover > ul {
+        opacity: 1;
+        visibility: visible;
+        transition: 0.8s;
+      }
+
+      ul ul ul {
+        left: 100%;
+        top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <ul class="menu">
+        <li>
+          文件
+          <ul>
+            <li>新建文件</li>
+            <li>新建窗口</li>
+            <li>
+              首选项
+              <ul>
+                <li>设置</li>
+                <li>
+                  扩展
+                  <ul>
+                    <li>aaa</li>
+                    <li>aaa</li>
+                    <li>aaa</li>
+                  </ul>
+                </li>
+                <li>颜色主题</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          编辑
+          <ul>
+            <li>撤销</li>
+            <li>恢复</li>
+            <li>在文件中查找</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+  </head>
+  <style>
+    /*设置html和body的高度为显示屏的高度*/
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    .wrap {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+      /*布局方向是垂直的*/
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+    }
+    /*设置顶部和底部的高度*/
+    .header,
+    .footer {
+      height: 40px;
+      line-height: 40px;
+      background-color: #d8d8d8;
+      text-align: center;
+    }
+    /*设置高度是跟父元素的高度一致，100%；*/
+    /*实际高度是 100% 减去顶部高度和底部高度，左右两边固定，中间是剩余100%原理一致*/
+    .main {
+      -webkit-box-flex: 1;
+      -webkit-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+      width: 100%;
+      overflow: auto;
+    }
+  </style>
+  <body>
+    <div class="wrap">
+      <div class="header">header</div>
+      <div class="main">
+        <div style="height: 300%">
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est fuga
+          maxime tempora quod minima veritatis vero obcaecati, nam voluptates
+          atque expedita ullam, incidunt cumque quae, illum pariatur autem
+          provident unde! Lorem ipsum dolor sit amet consectetur adipisicing
+          elit. Corporis atque est sunt, ipsum voluptatem minima harum dolore
+          natus, magnam delectus dicta deserunt accusantium assumenda maxime
+          quisquam saepe debitis optio eligendi. Lorem ipsum dolor sit amet
+          consectetur adipisicing elit. Eveniet sunt porro tempora, nisi eum
+          rerum accusantium dolor sint aliquid adipisci quod accusamus! Nihil
+          nesciunt eaque, consequuntur eum iusto velit voluptates. Lorem ipsum
+          dolor sit amet consectetur adipisicing elit. Natus officiis odit
+          doloribus architecto maiores nisi dicta dolore? Sapiente, facilis.
+          Molestias sint vero quasi dolor aut commodi explicabo! Nostrum,
+          reiciendis laudantium! Lorem ipsum dolor sit amet consectetur
+          adipisicing elit. Illo perferendis, qui voluptates velit recusandae
+          eaque modi ducimus accusamus? Facere vitae laudantium quam quas
+          dolorum velit magni quae harum dolores excepturi!
+        </div>
+      </div>
+      <div class="footer">footer</div>
+    </div>
+  </body>
+</html>
