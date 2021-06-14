@@ -437,7 +437,7 @@
   while(count++ < student_num){
     sum += Number(prompt())
   }
-  console.log(sum / student_num)
+  console.log((sum / student_num).toFixed(2))
 </script>
 
 <script id="ch0105/02" type="x">
@@ -448,7 +448,6 @@
     sum += each_month
   }
   let average = (sum / 12).toFixed(2)
-  console.log(average)
   console.log(`$${average}`)
 </script>
 
@@ -510,23 +509,25 @@
 </script>
 
 <script id="ch0105/07" type="x">
-  let day = Number(prompt())
-  let golden_sum = 0, sliver_sum = 0, copper_sum = 0;
-  while(day--) {
-    let golden_medal = Number(prompt())
-    let silver_medal = Number(prompt())
-    let copper_medal = Number(prompt())
+  let day = Number(prompt());
+  let golden_sum = 0,
+    sliver_sum = 0,
+    copper_sum = 0;
+  while (day--) {
+    let golden_medal = Number(prompt());
+    let sliver_medal = Number(prompt());
+    let copper_medal = Number(prompt());
 
-    golden_sum += golden_medal
-    sliver_sum += silver_medal
-    copper_sum += copper_medal
+    golden_sum += golden_medal;
+    sliver_sum += sliver_medal;
+    copper_sum += copper_medal;
   }
 
-  console.log(golden_sum)
-  console.log(silver_sum)
-  console.log(copper_sum)
+  console.log(golden_sum);
+  console.log(sliver_sum);
+  console.log(copper_sum);
 
-  console.log(golden_sum + silver_sum + copper_sum)
+  console.log(golden_sum + sliver_sum + copper_sum);
 </script>
 
 <script id="ch0105/08" type="x">
@@ -551,11 +552,10 @@
       sum += i
     }
   }
-
   console.log(sum)
 </script>
 
-<script class="ch0105/10" type="x">
+<script id="ch0105/10" type="x">
   let m = Number(prompt())
   let n = Number(prompt())
   let sum = 0
@@ -570,16 +570,18 @@
 
 <script id="ch0105/11" type="x">
   let n = Number(prompt())
+  let num;
   let one_counter = 0, five_counter = 0, ten_counter = 0
 
   while(n--) {
-    if(n === 1) {
+    num = Number(prompt())
+    if(num === 1) {
       one_counter++;
     }
-    else if(n === 5) {
+    else if(num === 5) {
       five_counter++;
     }
-    else if(n === 10) {
+    else if(num === 10) {
       ++ten_counter;
     }
   }
@@ -593,9 +595,11 @@
   let n = Number(prompt())
   let m = Number(prompt())
   let counter = 0
+  let num
 
   for(let i = 0; i < n; ++i) {
-    if(i === m) {
+    num = Number(prompt())
+    if(num === m) {
       ++counter
     }
   }
@@ -620,6 +624,16 @@
   }
 
   console.log((x * rate).toFixed(4))
+</script>
+
+<script id="ch0105/15" type="x">
+  let R = Number(prompt())
+  let M = Number(prompt())
+  let Y = Number(prompt())
+
+  let money = M * ((1 + R / 100) ** Y)
+
+  console.log(Math.floor(money))
 </script>
 
 <script id="ch0105/16" type="x">
@@ -704,14 +718,14 @@
   let count = 10
   let distance = height;
   while(--count && height > 0) {
-  	height /= 2;
+  	height = height / 2;
   	distance += 2 * height
   	if(count > 0 && height < 0) {
   		console.log("heighet is zero, can't flex itself")
   	}
   }
-  console.log(distance)
-  console.log(height / 2)
+  console.log(distance.toFixed(4))
+  console.log((height / 2).toFixed(7))
 </script>
 
 <script id="ch0105/21" type="x">
@@ -719,12 +733,12 @@
 
   while(1 !== n) {
   	if(n % 2) {
-  		console.log(`${n}*3+1=${n}`)
+  		console.log(`${n}*3+1=${n * 3 + 1}`)
   		n = n * 3 + 1
   	}
   	if(n % 2 === 0)
   		console.log(`${n}/2=${n/2}`)
-  		n /= 2;
+  		n = n / 2;
   }
   console.log("End")
 </script>
@@ -752,7 +766,8 @@
   	console.log(flag)
   }
   else {
-  	console.log(storage * 1.2)
+  console.log(`storage: ${storage}`)
+  	console.log(storage * 1.2 + month_rest)
   }
 </script>
 
@@ -763,7 +778,7 @@
   let medicine_each_person;
   while(person_num--) {
   	medicine_each_person = Number(prompt())
-  	if(medicine_each_person < medicine_num) {
+  	if(medicine_each_person > medicine_num) {
   		fail_counter++;
   	}
   	else {
@@ -781,16 +796,18 @@
   	stress = Number(prompt())
   	relax = Number(prompt())
 
-  	if(60 < relax && rleax < 90 && 90 < stress && stress < 140) {
+  	if(60 <= relax && relax <= 90 && 90 <= stress && stress <= 140) {
   		continue_hour++
   	}
   	else {
-  		if(max_continue_hour < continue_hour) {
-  			max_continue_hour = continue_hour
-  		}
   		continue_hour = 0
   	}
+  	if(max_continue_hour < continue_hour) {
+  			max_continue_hour = continue_hour
+  		}
   }
+
+  console.log(max_continue_hour)
 </script>
 
 <script id="ch0105/25" type="x">
@@ -833,7 +850,7 @@
   while (n--) {
     num = Number(prompt());
     each = num % 10;
-    num = (num - eac) / 10;
+    num = (num - each) / 10;
     ten = num % 10;
     num = (num - ten) / 10;
     hundred = num % 10;
@@ -850,9 +867,9 @@
 <script id="ch0105/27" type="x">
   let k = Number(prompt())
   let sn = 1
-  let n = 2
+  let n = 1
   while(sn <= k) {
-    sn += 1 / n++
+    sn += 1 / ++n
   }
   console.log(n)
 </script>
@@ -1057,6 +1074,11 @@
     }
     console.log(current_combat_power)
 </script>
+
+<script id="ch0105/38" type="">
+  
+</script>
+
 <script id="ch0105/39" type="x">
   let n = Number(prompt())
   let sum = 0
@@ -1154,7 +1176,7 @@
   console.log(max)
 </script>
 
-<script id="ch0105/44" type="">
+<script id="ch0105/44" type="x">
   let n = Number(prompt());
   let prime = new Array(10000)
 
