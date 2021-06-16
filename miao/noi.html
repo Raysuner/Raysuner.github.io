@@ -6,7 +6,8 @@
 </script>
 
 <script id="ch0103/02" type="x">
-  let a = Number(prompt()) let b = Number(prompt())
+  let a = Number(prompt()) 
+  let b = Number(prompt())
   let c = Number(prompt())
 
   console.log((a + b) * c)
@@ -769,7 +770,6 @@
   	console.log(flag)
   }
   else {
-  console.log(`storage: ${storage}`)
   	console.log(storage * 1.2 + month_rest)
   }
 </script>
@@ -952,8 +952,10 @@
     ++index
   }
 
-  for(let i = 0; i < lamp.length; ++i) {
+  console.log(1) 
+  for(let i = 1; i < lamp.length; ++i) {
     if(lamp[i] === 0) {
+      console.log(",")
       console.log(i + 1)
     }
   }
@@ -1218,5 +1220,5 @@
     }
   }
   sum += (n - count) * k
-  console.log(`sum: ${sum}`)
+  console.log(sum)
 </script>
