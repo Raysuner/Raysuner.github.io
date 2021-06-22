@@ -1,12 +1,12 @@
 <script id="ch0103/01" type="x">
   let a = Number(prompt())
-  let b = Number(prompt()) 
+  let b = Number(prompt())
 
   console.log(a + b)
 </script>
 
 <script id="ch0103/02" type="x">
-  let a = Number(prompt()) 
+  let a = Number(prompt())
   let b = Number(prompt())
   let c = Number(prompt())
 
@@ -680,25 +680,24 @@
 </script>
 
 <script id="ch0105/18" type="x">
-  	let n = Number(prompt())
+  let n = Number(prompt())
+  let case_sum = Number(prompt())
+  let case_valid = Number(prompt())
+  let per = case_valid / case_sum
+  while(--n) {
   	let case_sum = Number(prompt())
   	let case_valid = Number(prompt())
-  	let per = case_valid / case_sum
-  // 5 125 99 112 89 145 99
-  	while(--n) {
-  		let case_sum = Number(prompt())
-  		let case_valid = Number(prompt())
 
-  		if(per < case_valid / case_sum - 0.05) {
-  			console.log("better")
-  		}
-  		else if(case_valid / case_sum < per - 0.05) {
-  			console.log("worse")
-  		}
-  		else {
-  			console.log("same")
-  		}
+  	if(per < case_valid / case_sum - 0.05) {
+  		console.log("better")
   	}
+  	else if(case_valid / case_sum < per - 0.05) {
+  		console.log("worse")
+  	}
+  	else {
+  		console.log("same")
+  	}
+  }
 </script>
 
 <script id="ch0105/19" type="x">
@@ -749,22 +748,19 @@
 
 <script id="ch0105/22" type="x">
   let month = 0
-  let month_rest = 0, month_spend = 0, month_storage = 0, storage = 0;
+  let month_rest = 0, month_spend = 0,  storage = 0;
   let flag = 0
   while(month++ < 12) {
   	month_spend = Number(prompt())
   	month_rest = 300 + month_rest - month_spend
   	if(month_rest < 0) {
   		flag = -month
+      break
   	}
   	if(month_rest >= 100) {
-  		month_storage = month_rest - (month_rest % 100)
+  		storage += month_rest - (month_rest % 100)
+      month_rest = month_rest % 100
   	}
-  	else {
-  		month_storage = 0
-  	}
-  	month_rest = month_rest - month_storage
-  	storage += month_storage
   }
   if(flag < 0) {
   	console.log(flag)
@@ -845,7 +841,7 @@
   /*console.log(i)
   console.log(change(i, 7))
   console.log(change(i, 9))*/
-  console.log(" (不提供) ")
+  console.log("(不提供)")
 </script>
 <script id="ch0105/26" type="x">
   let n = Number(prompt());
@@ -953,10 +949,10 @@
     ++index
   }
 
-  console.log(1) 
+  console.log(1)
   for(let i = 1; i < lamp.length; ++i) {
     if(lamp[i] === 0) {
-      console.log(" , ")
+      console.log(",")
       console.log(i + 1)
     }
   }
@@ -1081,9 +1077,9 @@
     console.log(current_combat_power)
 </script>
 
-<script id="ch0105/38" type="">
-  
-</script>
+<!-- <script id="ch0105/38" type=""> -->
+
+<!-- </script> -->
 
 <script id="ch0105/39" type="x">
   let n = Number(prompt())
@@ -1165,18 +1161,12 @@
 <script id="ch0105/43" type="x">
   let n = Number(prompt());
   let max = -1
-  while (1) {
-    for (let i = 2; i <= n; ++i) {
-      if (n % i === 0) {
-        n = n / i
-        if (max < i) {
-          max = i
-        }
-        break
+  for (let i = 2; i <= n; ++i) {
+    while (n % i === 0) {
+      n = n / i
+      if (max < i) {
+        max = i
       }
-    }
-    if(n === 1) {
-      break
     }
   }
   console.log(max)
@@ -1222,4 +1212,86 @@
   }
   sum += (n - count) * k
   console.log(sum)
+</script>
+
+<script id="narcissistic" type="x">
+  let num = Number(prompt());
+  console.log(isNarcissistic(num));
+
+  function isNarcissistic(num) {
+    let copy_num = num;
+    let len = String(num).length;
+    let reminder;
+    let sum = 0;
+    while (num != 0) {
+      reminder = num % 10;
+      sum += reminder ** len;
+      num = (num - reminder) / 10;
+    }
+    if (sum === copy_num) {
+      return true;
+    }
+    return false;
+  }
+</script>
+
+<script id="narcissistics" type="x">
+  let right_edge = Number(prompt());
+
+  function narcissistics(num) {
+    for (let i = 1; i <= num; ++i) {
+      if (isNarcissistic(i)) {
+        console.log(i);
+      }
+    }
+  }
+
+  function isNarcissistic(num) {
+    let copy_num = num;
+    let len = String(num).length;
+    let reminder;
+    let sum = 0;
+    while (num != 0) {
+      reminder = num % 10;
+      sum += reminder ** len;
+      num = (num - reminder) / 10;
+    }
+    if (sum === copy_num) {
+      return true;
+    }
+    return false;
+  }
+</script>
+
+<script type="x" id="palindrom">
+  let str = prompt("is palindrom ?")
+  console.log(isPalindrom(str))
+
+  function isPalindrom(str) {
+    let len = str.length;
+    if (len <= 1) {
+      return true;
+    }
+    let left = 0;
+    let right = len - 1;
+
+    while (right >= left) {
+      if (str[right] === str[left]) {
+        right--;
+        left++;
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
+</script>
+
+<script type="" id="complete-number">
+  let n = Number(prompt())
+  while(1) {
+    for(let i = 0; i < )
+  }
+</script>
+  
 </script>
