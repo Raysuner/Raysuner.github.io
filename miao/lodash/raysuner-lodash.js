@@ -1,18 +1,46 @@
 var raysuner = {
     /*
+    基础函数
+     */
+    getObjKey: function (collection, key, callback) {
+        let index
+        if (callback instanceof Function) {
+            index = callback(collection[key])
+        }
+        else if (typeof callback === "string") {
+            index = collection[key][callback]
+        }
+        return index
+    },
+
+    predicate: function (callback, item) {
+        if (callback instanceof Function) {
+            if (callback(item)) {
+                return true
+            }
+        }
+        else if (typeof callback === "string") {
+            if (item[callback]) {
+                return true
+            }
+        }
+        return false
+    },
+
+    type: function (obj) {
+        if (typeof obj === "object") {
+            return Object.prototype.toString.call(obj).match(/\b[A-Z]\w+\b/g)[0].toLowerCase();
+        }
+        return typeof obj;
+    },
+    /*
     集合
      */
-    countBy: function (collection, predicate, arg) {
+    countBy: function (collection, callback, arg) {
         let count = {}
         for (let key in collection) {
-            let index
             if (collection.hasOwnProperty(key)) {
-                if (predicate instanceof Function) {
-                    index = predicate(collection[key])
-                }
-                else if(typeof predicate === "string") {
-                    index = collection[key][predicate]
-                }
+                let index = raysuner.getObjKey(collection, key, callback)
                 if (index in count) {
                     count[index]++
                 }
@@ -55,41 +83,33 @@ var raysuner = {
         }
     },
 
-    every: function (collection, predicate) {
+    every: function (collection, callback) {
         const array = []
         if (collection.length === 0) {
             return array
         }
-        for (let key in predicate) {
-            if (predicate.hasOwnProperty(key)) {
+        for (let key in callback) {
+            if (callback.hasOwnProperty(key)) {
 
             }
         }
     },
 
-    filter: function (collection, predicate) {
+    filter: function (collection, callback) {
         const array = []
-        if (predicate instanceof Function) {
+        if (callback instanceof Function || typeof callback === "string") {
             for (let obj of collection) {
-                if (predicate(obj)) {
+                if (raysuner.predicate(callback, obj)) {
                     array.push(obj)
                 }
             }
         }
 
-        else if (typeof predicate === "string") {
-            for (let obj of collection) {
-                if (obj[predicate]) {
-                    array.push(obj)
-                }
-            }
-        }
-
-        else if (Array.isArray(predicate)) {
-            for (let i = 0; i < predicate.length - 1; i++) {
-                if (typeof predicate[i] === "string" && typeof predicate[i + 1] === "boolean") {
+        else if (Array.isArray(callback)) {
+            for (let i = 0; i < callback.length - 1; i++) {
+                if (typeof callback[i] === "string" && typeof callback[i + 1] === "boolean") {
                     for (let obj of collection) {
-                        if (predicate[i] in obj && obj[predicate[i]] === predicate[i + 1]) {
+                        if (callback[i] in obj && obj[callback[i]] === callback[i + 1]) {
                             array.push(obj)
                         }
                     }
@@ -97,12 +117,12 @@ var raysuner = {
             }
         }
 
-        else if (typeof predicate === "object") {
+        else if (typeof callback === "object") {
             for (let obj of collection) {
                 let flag = true
-                for (let key in predicate) {
-                    if (predicate.hasOwnProperty(key)) {
-                        if (predicate[key] !== obj[key]) {
+                for (let key in callback) {
+                    if (callback.hasOwnProperty(key)) {
+                        if (callback[key] !== obj[key]) {
                             flag = false
                         }
                     }
@@ -115,29 +135,13 @@ var raysuner = {
         return array
     },
 
-    find: function (collection, predicate) {
+    find: function (collection, callback) {
         const array = []
-        if (predicate instanceof Function) {
-            for (let obj of collection) {
-                if (predicate(obj)) {
-                    return obj
-                }
-            }
-        }
-
-        else if (typeof predicate === "string") {
-            for (let obj of collection) {
-                if (obj[predicate]) {
-                    return obj
-                }
-            }
-        }
-
-        else if (Array.isArray(predicate)) {
-            for (let i = 0; i < predicate.length - 1; i++) {
-                if (typeof predicate[i] === "string" && typeof predicate[i + 1] === "boolean") {
+        if (Array.isArray(callback)) {
+            for (let i = 0; i < callback.length - 1; i++) {
+                if (typeof callback[i] === "string" && typeof callback[i + 1] === "boolean") {
                     for (let obj of collection) {
-                        if (predicate[i] in obj && obj[predicate[i]] === predicate[i + 1]) {
+                        if (callback[i] in obj && obj[callback[i]] === callback[i + 1]) {
                             return obj
                         }
                     }
@@ -145,12 +149,12 @@ var raysuner = {
             }
         }
 
-        else if (typeof predicate === "object") {
+        else if (raysuner.type(callback) === "object") {
             for (let obj of collection) {
                 let flag = true
-                for (let key in predicate) {
-                    if (predicate.hasOwnProperty(key)) {
-                        if (predicate[key] !== obj[key]) {
+                for (let key in callback) {
+                    if (callback.hasOwnProperty(key)) {
+                        if (callback[key] !== obj[key]) {
                             flag = false
                         }
                     }
@@ -160,44 +164,35 @@ var raysuner = {
                 }
             }
         }
+        else {
+            for (let obj of collection) {
+                if (raysuner.predicate(callback, obj)) {
+                    return obj
+                }
+            }
+        }
     },
 
-    flatMap: function (collection, predicate) {
+    flatMap: function (collection, callback) {
         let array = []
-        if (predicate instanceof Function) {
+        if (callback instanceof Function) {
             for (let item of collection) {
-                array = array.concat(predicate(item))
+                array = array.concat(callback(item))
             }
             return array
         }
     },
 
-    groupBy: function (collection, predicate) {
+    groupBy: function (collection, callback) {
         const res = {}
         for (let key in collection) {
             if (collection.hasOwnProperty(key)) {
-                if (predicate instanceof Function) {
-                    let resKey = predicate(collection[key])
-                    if (resKey in res) {
-                        res[resKey].push(collection[key])
-                    }
-                    else {
-                        res[resKey] = [collection[key]]
-                    }
+                let resKey = raysuner.getObjKey(collection, key, callback)
+                if (resKey in res) {
+                    res[resKey].push(collection[key])
                 }
-                else if (typeof predicate === "string") {
-                    let reskey = collection[key][predicate]
-                    if (reskey !== undefined) {
-                        if (reskey in res) {
-                            res[reskey].push(collection[key])
-                        }
-                        else {
-                            res[reskey] = [collection[key]]
-                        }
-                    }
-                    else {
-                        res[reskey] = collection
-                    }
+                else {
+                    res[resKey] = [collection[key]]
                 }
             }
         }
@@ -235,8 +230,29 @@ var raysuner = {
         return false
     },
 
-    invokeMap: function (collection, predicate) {
+    invokeMap: function (collection, callback, arg) {
+        const array = []
+        for (let key in collection) {
+            if (collection.hasOwnProperty(key)) {
+                if (typeof callback === "string") {
+                    array.push(collection[key][callback]())
+                }
+                else if (callback instanceof Function) {
+                    array.push(callback.call(collection[key], arg))
+                }
+            }
+        }
+        return array
+    },
 
+    keyBy: function (collection, callback) {
+        const res = {}
+        for (let key in collection) {
+            if (collection.hasOwnProperty(key)) {
+                let resKey = raysuner.getObjKey(collection, key, callback)
+                res[resKey] = collection[key]
+            }
+        }
     }
 }
 
@@ -249,20 +265,19 @@ var users = [
 // console.log(raysuner.flatMap([1,2], function (n) {
 //     return [n, n]
 // }))
-raysuner.forEachRight([1, 2], function(value) {
-    console.log(value);
-})
+// raysuner.forEachRight([1, 2], function(value) {
+//     console.log(value);
+// })
 // console.log(raysuner.filter(users, function(o) { return !o.active; }))
-// console.log(raysuner.filter(users, { 'age': 36, 'active': false }))
+// console.log(raysuner.filter(users, { 'age': 36, 'active': true }))
 // console.log(raysuner.filter(users, ['active', false ]))
 // console.log(raysuner.filter(users, 'active'))
-
+//
 // console.log(raysuner.find(users, function(o) { return !o.active; }))
 // console.log(raysuner.find(users, { 'age': 36, 'active': true }))
 // console.log(raysuner.find(users, ['active', false ]))
 // console.log(raysuner.find(users, 'active'))
-// console.log(raysuner.flatMapDeep([[1], [2]], function (n) {
-//     return [[[n, n]]]
-// }))
 // console.log(raysuner.groupBy([6.1, 4.2, 6.3], Math.floor))
 // console.log(raysuner.groupBy(['one', 'two', 'three'], 'length'))
+// console.log(raysuner.invokeMap([[5, 1, 7], [3, 2, 1]], 'sort'))
+// console.log(raysuner.invokeMap([123, 456], String.prototype.split, ''))
