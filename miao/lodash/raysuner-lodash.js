@@ -1,9 +1,18 @@
 var raysuner = {
-    countBy: function (collection, callback) {
+    /*
+    集合
+     */
+    countBy: function (collection, predicate, arg) {
         let count = {}
         for (let key in collection) {
+            let index
             if (collection.hasOwnProperty(key)) {
-                let index = callback(collection[key])
+                if (predicate instanceof Function) {
+                    index = predicate(collection[key])
+                }
+                else if(typeof predicate === "string") {
+                    index = collection[key][predicate]
+                }
                 if (index in count) {
                     count[index]++
                 }
@@ -154,10 +163,10 @@ var raysuner = {
     },
 
     flatMap: function (collection, predicate) {
-        const array = []
+        let array = []
         if (predicate instanceof Function) {
             for (let item of collection) {
-                array.concat(predicate(item))
+                array = array.concat(predicate(item))
             }
             return array
         }
@@ -196,7 +205,7 @@ var raysuner = {
     },
 
     includes: function (collection, value, fromIndex = 0) {
-        if (typeof collection[key] === "object") {
+        if (typeof collection[0] === "object") {
             for (let key in collection) {
                 if (collection.hasOwnProperty(key)) {
                     if (key === value) {
@@ -225,13 +234,24 @@ var raysuner = {
         }
         return false
     },
+
+    invokeMap: function (collection, predicate) {
+
+    }
 }
 
 var users = [
     {'user': 'barney', 'age': 36, 'active': true},
     {'user': 'fred', 'age': 40, 'active': false}
 ];
-
+// console.log(raysuner.countBy([6.1, 4.2, 6.3], Math.floor))
+// console.log(raysuner.countBy(['one', 'two', 'three'], 'length'))
+// console.log(raysuner.flatMap([1,2], function (n) {
+//     return [n, n]
+// }))
+raysuner.forEachRight([1, 2], function(value) {
+    console.log(value);
+})
 // console.log(raysuner.filter(users, function(o) { return !o.active; }))
 // console.log(raysuner.filter(users, { 'age': 36, 'active': false }))
 // console.log(raysuner.filter(users, ['active', false ]))
@@ -244,6 +264,5 @@ var users = [
 // console.log(raysuner.flatMapDeep([[1], [2]], function (n) {
 //     return [[[n, n]]]
 // }))
-console.log(raysuner.groupBy([6.1, 4.2, 6.3], Math.floor))
-console.log(raysuner.groupBy(['one', 'two', 'three'], 'length'))
-console.log()
+// console.log(raysuner.groupBy([6.1, 4.2, 6.3], Math.floor))
+// console.log(raysuner.groupBy(['one', 'two', 'three'], 'length'))
