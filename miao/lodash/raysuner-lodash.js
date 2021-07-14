@@ -51,9 +51,9 @@ var raysuner = {
     },
 
     baseEach: function(collection, callback) {
-        if(raysuner.type(collection) === "object") {
-            const array = raysuner.objToArray(collection)
-            raysuner.forEach(array, callback)
+        if(this.type(collection) === "object") {
+            const array = this.objToArray(collection)
+            this.forEach(array, callback)
         }
     },
 
@@ -74,7 +74,7 @@ var raysuner = {
         let count = {}
         for (let key in collection) {
             if (collection.hasOwnProperty(key)) {
-                let index = raysuner.getObjKey(collection, key, callback)
+                let index = this.getObjKey(collection, key, callback)
                 if (index in count) {
                     count[index]++
                 }
@@ -88,21 +88,23 @@ var raysuner = {
 
     forEach: function (collection, callback) {
         if (collection instanceof Array) {
-            raysuner.arrayEach(collection, callback)
+            this.arrayEach(collection, callback)
         }
         else {
-            raysuner.baseEach(collection, callback)
+            this.baseEach(collection, callback)
         }
+        return collection
     },
 
     forEachRight: function (collection, callback) {
         if(Array.isArray(collection)) {
-            raysuner.arrayRightEach(collection, callback)
+            this.arrayRightEach(collection, callback)
         }
         else {
-            const array = raysuner.objToArray(collection)
-            raysuner.arrayRightEach(array, callback)
+            const array = this.objToArray(collection)
+            this.arrayRightEach(array, callback)
         }
+        return collection
     },
 
     every: function (collection, callback) {
@@ -131,7 +133,7 @@ var raysuner = {
             }
         }
 
-        else if (raysuner.type(callback) === "object") {
+        else if (this.type(callback) === "object") {
             for (let obj of collection) {
                 let flag = true
                 for (let key in callback) {
@@ -148,7 +150,7 @@ var raysuner = {
         }
         else {
             for (let obj of collection) {
-                if (raysuner.predicate(callback, obj)) {
+                if (this.predicate(callback, obj)) {
                     array.push(obj)
                 }
             }
@@ -170,7 +172,7 @@ var raysuner = {
             }
         }
 
-        else if (raysuner.type(callback) === "object") {
+        else if (this.type(callback) === "object") {
             for (let obj of collection) {
                 let flag = true
                 for (let key in callback) {
@@ -187,7 +189,7 @@ var raysuner = {
         }
         else {
             for (let obj of collection) {
-                if (raysuner.predicate(callback, obj)) {
+                if (this.predicate(callback, obj)) {
                     return obj
                 }
             }
@@ -208,7 +210,7 @@ var raysuner = {
         const res = {}
         for (let key in collection) {
             if (collection.hasOwnProperty(key)) {
-                let resKey = raysuner.getObjKey(collection, key, callback)
+                let resKey = this.getObjKey(collection, key, callback)
                 if (resKey in res) {
                     res[resKey].push(collection[key])
                 }
@@ -270,7 +272,7 @@ var raysuner = {
         const res = {}
         for (let key in collection) {
             if (collection.hasOwnProperty(key)) {
-                let resKey = raysuner.getObjKey(collection, key, callback)
+                let resKey = this.getObjKey(collection, key, callback)
                 res[resKey] = collection[key]
             }
         }
@@ -364,4 +366,4 @@ console.log(raysuner.map({a: 3, b: 9}, x => x * x))
 console.log(raysuner.map(users, 'user'))
 raysuner.sortBy(users1, (a, b)=> a.user - b.user)
 raysuner.sortBy(users1, (a, b) => a.age - b.age)
-console.log("sortBy",users1)
+console.log(users1)
