@@ -33,7 +33,6 @@ var raysuner = {
                 return true;
             }
         }
-
         return false;
     },
 
@@ -57,61 +56,79 @@ var raysuner = {
         return array;
     },
 
+    originalArrayForEach: function (collection, callback) {
+        for (let i = 0; i < collection.length; i++) {
+            callback(collection[i], i, collection);
+        }
+    },
+
     baseEach: function (collection, callback) {
-        for (let item of collection) {
-            callback(item);
+        for (let i = 0; i < collection.length; i++) {
+            if (callback(collection[i], i, collection) === false) {
+                break;
+            }
         }
     },
 
     objectEach: function (collection, callback) {
-        const array = raysuner.objectToArray(collection);
-        raysuner.baseEach(array, callback);
+        let keys = raysuner.objectToArray(collection);
+        for (let i = 0; i < keys.length; i++) {
+            if (callback(collection[keys[i]], keys[i], collection) === false) {
+                break;
+            }
+        }
     },
 
     baseRightEach: function (collection, callback) {
         for (let i = collection.length - 1; i >= 0; i--) {
-            callback(collection[i]);
+            if (callback(collection[i], i, collection) === false) {
+                break;
+            }
         }
     },
 
     objectRightEach: function (collection, callback) {
-        const array = raysuner.objectToArray(collection);
-        raysuner.baseRightEach(array, callback);
+        const keys = raysuner.objectToArray(collection);
+        for (let i = keys.length - 1; i >= 0; i--) {
+            if (callback(collection[keys[i]], keys[i], collection) === false) {
+                break;
+            }
+        }
     },
 
     baseFind: function (collection, callback, fromIndex) {
-        if (fromIndex >= 0) {
-            for (let item of collection) {
-                if (raysuner.predicate(item, callback)) {
-                    return item;
-                }
-            }
-        } else {
-            for (let i = collection.length - 1; i >= 0; i--) {
-                if (raysuner.predicate(collection[i], callback)) {
-                    return collection[i];
-                }
+        for (let i = fromIndex; i < collection.length; i++) {
+            if (raysuner.predicate(collection[i], callback)) {
+                return collection[i];
             }
         }
     },
 
     objectFind: function (collection, callback, fromIndex) {
         const keys = raysuner.objectToArray(collection);
-        if (fromIndex >= 0) {
-            for (let key of keys) {
-                if (raysuner.predicate(collection[key], callback)) {
-                    return collection[key];
-                }
-            }
-        } else {
-            for (let i = keys.length - 1; i >= 0; i--) {
-                if (raysuner.predicate(collection[i], callback)) {
-                    return collection[i];
-                }
+        for (let i = fromIndex; i < keys.length; i++) {
+            if (raysuner.predicate(collection[keys[i]], callback)) {
+                return collection[keys[i]];
             }
         }
     },
 
+    baseFindLast: function (collection, callback, fromIndex) {
+        for (let i = collection.length - 1 - fromIndex; i >= 0; i--) {
+            if (raysuner.predicate(collection[i], callback)) {
+                return collection[i];
+            }
+        }
+    },
+
+    objectFindLast: function (collection, callback, fromIndex) {
+        const keys = raysuner.objectToArray(collection);
+        for (let i = keys.length - 1 - fromIndex; i >= 0; i--) {
+            if (raysuner.predicate(collection[keys[i]], callback)) {
+                return collection[keys[i]];
+            }
+        }
+    },
     /*
     集合
      */
@@ -173,6 +190,13 @@ var raysuner = {
         let func = Array.isArray(collection)
             ? raysuner.baseFind
             : raysuner.objectFind;
+        return func(collection, callback, fromIndex);
+    },
+
+    findLast: function (collection, callback, fromIndex = 0) {
+        let func = Array.isArray(collection)
+            ? raysuner.baseFindLast
+            : raysuner.objectFindLast;
         return func(collection, callback, fromIndex);
     },
 
@@ -277,9 +301,9 @@ var users2 = [
     { dir: "right", code: 100 },
 ];
 var users3 = [
-    { 'user': 'barney', 'age': 36, 'active': false },
-    { 'user': 'fred',   'age': 40, 'active': false }
-  ];
+    { user: "barney", age: 36, active: false },
+    { user: "fred", age: 40, active: false },
+];
 
 raysuner.forEach([1, 2], (item) => {
     console.log(item);
@@ -290,8 +314,8 @@ raysuner.forEach({ a: 1, b: 2 }, (item) => {
 raysuner.forEachRight([1, 2], (item) => {
     console.log(item);
 });
-raysuner.forEachRight({ a: 1, b: 2 }, (item) => {
-    console.log(item);
+raysuner.forEachRight({ a: 1, b: 2 }, (item, key) => {
+    console.log(item, key);
 });
 console.log(raysuner.countBy([6.1, 4.2, 6.3], Math.floor));
 console.log(raysuner.countBy(["one", "two", "three"], "length"));
@@ -306,11 +330,11 @@ console.log(raysuner.every([true, 1, null, "yes"], Boolean));
 // => false
 
 // The `_.matchesProperty` iteratee shorthand.
-console.log(raysuner.every(users3, { 'user': 'barney', 'active': false }))
+console.log(raysuner.every(users3, { user: "barney", active: false }));
 // => true
-console.log(raysuner.every(users3, ['active', false]))
+console.log(raysuner.every(users3, ["active", false]));
 // The `_.property` iteratee shorthand.
-console.log(raysuner.every(users3, "active"))
+console.log(raysuner.every(users3, "active"));
 // => false
 console.log(
     raysuner.filter(users, function (o) {
@@ -329,6 +353,11 @@ console.log(
 console.log(raysuner.find(users, { age: 1, active: true }));
 console.log(raysuner.find(users, ["active", false]));
 console.log(raysuner.find(users, "active"));
+debugger;
+console.log(
+    "last",
+    raysuner.findLast(users, (val) => val.age % 2 === 0)
+);
 console.log(raysuner.groupBy([6.1, 4.2, 6.3], Math.floor));
 console.log(raysuner.groupBy(["one", "two", "three"], "length"));
 console.log(
