@@ -256,8 +256,8 @@ var raysuner = {
         const array = [];
         for (let key in collection) {
             if (collection.hasOwnProperty(key)) {
-                if (callback instanceof Function) {
-                    array.push(callback(collection[key]));
+                if (typeof callback === "function") {
+                    array.push(callback(collection[key], key, collection));
                 } else {
                     array.push(collection[key][callback]);
                 }
@@ -305,76 +305,76 @@ var users3 = [
     { user: "fred", age: 40, active: false },
 ];
 
-raysuner.forEach([1, 2], (item) => {
-    console.log(item);
-});
-raysuner.forEach({ a: 1, b: 2 }, (item) => {
-    console.log(item);
-});
-raysuner.forEachRight([1, 2], (item) => {
-    console.log(item);
-});
-raysuner.forEachRight({ a: 1, b: 2 }, (item, key) => {
-    console.log(item, key);
-});
-console.log(raysuner.countBy([6.1, 4.2, 6.3], Math.floor));
-console.log(raysuner.countBy(["one", "two", "three"], "length"));
-console.log(
-    raysuner.flatMap([1, 2], function (n) {
-        return [n, n];
-    })
-);
-console.log(raysuner.every([true, 1, null, "yes"], Boolean));
+// raysuner.forEach([1, 2], (item) => {
+//     console.log(item);
+// });
+// raysuner.forEach({ a: 1, b: 2 }, (item) => {
+//     console.log(item);
+// });
+// raysuner.forEachRight([1, 2], (item) => {
+//     console.log(item);
+// });
+// raysuner.forEachRight({ a: 1, b: 2 }, (item, key) => {
+//     console.log(item, key);
+// });
+// console.log(raysuner.countBy([6.1, 4.2, 6.3], Math.floor));
+// console.log(raysuner.countBy(["one", "two", "three"], "length"));
+// console.log(
+//     raysuner.flatMap([1, 2], function (n) {
+//         return [n, n];
+//     })
+// );
+// console.log(raysuner.every([true, 1, null, "yes"], Boolean));
 // => false
 // The `raysuner.matches` iteratee shorthand.
 // => false
 
 // The `_.matchesProperty` iteratee shorthand.
-console.log(raysuner.every(users3, { user: "barney", active: false }));
-// => true
-console.log(raysuner.every(users3, ["active", false]));
-// The `_.property` iteratee shorthand.
-console.log(raysuner.every(users3, "active"));
-// => false
-console.log(
-    raysuner.filter(users, function (o) {
-        return !o.active;
-    })
-);
-console.log(raysuner.filter(users, { age: 36, active: true }));
-console.log(raysuner.filter(users, ["active", false]));
-console.log(raysuner.filter(users, "active"));
+// console.log(raysuner.every(users3, { user: "barney", active: false }));
+// // => true
+// console.log(raysuner.every(users3, ["active", false]));
+// // The `_.property` iteratee shorthand.
+// console.log(raysuner.every(users3, "active"));
+// // => false
+// console.log(
+//     raysuner.filter(users, function (o) {
+//         return !o.active;
+//     })
+// );
+// console.log(raysuner.filter(users, { age: 36, active: true }));
+// console.log(raysuner.filter(users, ["active", false]));
+// console.log(raysuner.filter(users, "active"));
 
-console.log(
-    raysuner.find(users, function (o) {
-        return o.age < 40;
-    })
-);
-console.log(raysuner.find(users, { age: 1, active: true }));
-console.log(raysuner.find(users, ["active", false]));
-console.log(raysuner.find(users, "active"));
-debugger;
-console.log(
-    "last",
-    raysuner.findLast(users, (val) => val.age % 2 === 0)
-);
-console.log(raysuner.groupBy([6.1, 4.2, 6.3], Math.floor));
-console.log(raysuner.groupBy(["one", "two", "three"], "length"));
-console.log(
-    raysuner.invokeMap(
-        [
-            [5, 1, 7],
-            [3, 2, 1],
-        ],
-        "sort"
-    )
-);
-console.log(raysuner.invokeMap([123, 456], String.prototype.split, ""));
-console.log(raysuner.keyBy(users2, (o) => String.fromCharCode(o.code)));
-console.log(raysuner.keyBy(users2, "dir"));
+// console.log(
+//     raysuner.find(users, function (o) {
+//         return o.age < 40;
+//     })
+// );
+// console.log(raysuner.find(users, { age: 1, active: true }));
+// console.log(raysuner.find(users, ["active", false]));
+// console.log(raysuner.find(users, "active"));
+// debugger;
+// console.log(
+//     "last",
+//     raysuner.findLast(users, (val) => val.age % 2 === 0)
+// );
+// console.log(raysuner.groupBy([6.1, 4.2, 6.3], Math.floor));
+// console.log(raysuner.groupBy(["one", "two", "three"], "length"));
+// console.log(
+//     raysuner.invokeMap(
+//         [
+//             [5, 1, 7],
+//             [3, 2, 1],
+//         ],
+//         "sort"
+//     )
+// );
+// console.log(raysuner.invokeMap([123, 456], String.prototype.split, ""));
+// console.log(raysuner.keyBy(users2, (o) => String.fromCharCode(o.code)));
+// console.log(raysuner.keyBy(users2, "dir"));
 console.log(raysuner.map([2, 4], (x) => x * x));
 console.log(raysuner.map({ a: 3, b: 9 }, (x) => x * x));
 console.log(raysuner.map(users, "user"));
-raysuner.sortBy(users1, (a, b) => a.user - b.user);
-raysuner.sortBy(users1, (a, b) => a.age - b.age);
-console.log(users1);
+// raysuner.sortBy(users1, (a, b) => a.user - b.user);
+// raysuner.sortBy(users1, (a, b) => a.age - b.age);
+// console.log(users1);
