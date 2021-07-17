@@ -192,14 +192,18 @@ var raysuner = {
         return arr;
     },
 
-    difference: function (array, value) {
+    difference: function (array, ...values) {
         if (!Array.isArray(array)) {
             return [];
-        } else if (Array.isArray(array) && !Array.isArray(value)) {
-            return array;
+        }
+        let filter = []
+        for(let item of values) {
+            if(Array.isArray(item)) {
+                filter = raysuner.concat(filter, item)
+            }
         }
         let set = {};
-        for (let item of value) {
+        for (let item of filter) {
             if (!(item in set)) {
                 set[item] = true;
             }
@@ -213,14 +217,12 @@ var raysuner = {
         return arr;
     },
 
-    differenceBy: function (array, values, callback) {
+    differenceBy: function (array, values, callback = null) {
         if (!Array.isArray(array)) {
             return [];
-        } else if (
-            (Array.isArray(array) && !Array.isArray(values)) ||
-            (typeof callback !== "function" && typeof callback !== "string")
-        ) {
-            return array;
+        } 
+        if(!callback) {
+            return raysuner.difference(array, values)
         }
         let set = {};
         let key;
@@ -378,7 +380,7 @@ var raysuner = {
         for (let key in collection) {
             if (collection.hasOwnProperty(key)) {
                 if (typeof callback === "function") {
-                    array.push(callback(collection[key], key, collection));
+                    array.push(callback(collection[key], Number(key), collection));
                 } else {
                     array.push(collection[key][callback]);
                 }
@@ -387,7 +389,7 @@ var raysuner = {
         return array;
     },
 
-    sortBy: function (collection, compare, callbackFn) {
+    sortBy: function (collection, compare, callbackFn = null) {
         for (let i = 1; i < collection.length; i++) {
             let temp = collection[i];
             let j;
@@ -427,9 +429,10 @@ var users3 = [
 ];
 
 // console.log(raysuner.chunk([1, 2, 3], 2));
-// console.log(raysuner.difference([1,2,3], [4,2]))
+console.log(raysuner.difference([1,2,3], [4,2], 1, [1]))
+console.log(raysuner.differenceBy([1,2,3], [4,2]))
 console.log(raysuner.differenceBy([3.1, 2.2, 1.3], [4.4, 2.5], Math.floor));
-console.log(raysuner.differenceBy([{ x: 2 }, { x: 1 }], [{ x: 1 }], "x"));
+console.log(raysuner.differenceBy([{ x: 2 }, { x: 1, y: 1 }], [{ y: 1 }], "y"));
 // raysuner.forEach([1, 2], (item) => {
 //     console.log(item);
 // });
@@ -496,7 +499,7 @@ console.log(raysuner.differenceBy([{ x: 2 }, { x: 1 }], [{ x: 1 }], "x"));
 // console.log(raysuner.map([2, 4], (x) => x * x));
 // console.log(raysuner.map({ a: 3, b: 9 }, (x) => x * x));
 // debugger
-// console.log(raysuner.map([1,2,3,4,5], (a,b) => (a + b) % 2 === 0));
+console.log(raysuner.map([1,2,3,4,5], (a,b) => (a + b) % 2 === 0));
 // console.log(raysuner.map(users, "user"));
 // raysuner.sortBy(users1, (a, b) => a.user - b.user);
 // raysuner.sortBy(users1, (a, b) => a.age - b.age);
