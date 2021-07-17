@@ -3,3 +3,5 @@ test*
 .idea
 leetcode*
 learn*
+node_module*
+.*vscode
