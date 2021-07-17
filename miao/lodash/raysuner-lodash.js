@@ -12,13 +12,21 @@ var raysuner = {
         return key;
     },
     getValue: function (item, callback) {
-        let index;
+        let value;
         if (typeof callback === "function") {
-            index = callback(item);
+            value = callback(item);
         } else if (typeof callback === "string") {
-            index = item[callback];
+            if (callback.includes(".")) {
+                let keys = raysuner.split(callback, ".");
+                for (let key of keys) {
+                    item = item[key];
+                }
+                value = item;
+            } else {
+                value = item[callback];
+            }
         }
-        return index;
+        return value;
     },
 
     predicate: function (item, callback) {
@@ -196,10 +204,10 @@ var raysuner = {
         if (!Array.isArray(array)) {
             return [];
         }
-        let filter = []
-        for(let item of values) {
-            if(Array.isArray(item)) {
-                filter = raysuner.concat(filter, item)
+        let filter = [];
+        for (let item of values) {
+            if (Array.isArray(item)) {
+                filter = raysuner.concat(filter, item);
             }
         }
         let set = {};
@@ -220,9 +228,9 @@ var raysuner = {
     differenceBy: function (array, values, callback = null) {
         if (!Array.isArray(array)) {
             return [];
-        } 
-        if(!callback) {
-            return raysuner.difference(array, values)
+        }
+        if (!callback) {
+            return raysuner.difference(array, values);
         }
         let set = {};
         let key;
@@ -380,9 +388,12 @@ var raysuner = {
         for (let key in collection) {
             if (collection.hasOwnProperty(key)) {
                 if (typeof callback === "function") {
-                    array.push(callback(collection[key], Number(key), collection));
-                } else {
-                    array.push(collection[key][callback]);
+                    array.push(
+                        callback(collection[key], Number(key), collection)
+                    );
+                } else if (typeof callback === "string") {
+                    let val = raysuner.getValue(collection[key], callback);
+                    array.push(val);
                 }
             }
         }
@@ -405,6 +416,29 @@ var raysuner = {
     },
 
     orderBy: function (collection, callback, order) {},
+
+    /*
+    字符串
+    */
+    subString: function (str, start, end = str.length) {
+        let s = "";
+        for (let i = start; i < end; i++) {
+            s += str[i];
+        }
+        return s;
+    },
+
+    split: function (str, separator, len = Infinity) {
+        const array = [];
+        for (let i = 0, j = 0; j <= str.length && array.length < len; ) {
+            if (str[j] === separator || j === str.length) {
+                array.push(raysuner.subString(str, i, j));
+                i = ++j;
+            }
+            ++j;
+        }
+        return array;
+    },
 };
 
 var users = [
@@ -429,8 +463,8 @@ var users3 = [
 ];
 
 // console.log(raysuner.chunk([1, 2, 3], 2));
-console.log(raysuner.difference([1,2,3], [4,2], 1, [1]))
-console.log(raysuner.differenceBy([1,2,3], [4,2]))
+console.log(raysuner.difference([1, 2, 3], [4, 2], 1, [1]));
+console.log(raysuner.differenceBy([1, 2, 3], [4, 2]));
 console.log(raysuner.differenceBy([3.1, 2.2, 1.3], [4.4, 2.5], Math.floor));
 console.log(raysuner.differenceBy([{ x: 2 }, { x: 1, y: 1 }], [{ y: 1 }], "y"));
 // raysuner.forEach([1, 2], (item) => {
@@ -499,8 +533,9 @@ console.log(raysuner.differenceBy([{ x: 2 }, { x: 1, y: 1 }], [{ y: 1 }], "y"));
 // console.log(raysuner.map([2, 4], (x) => x * x));
 // console.log(raysuner.map({ a: 3, b: 9 }, (x) => x * x));
 // debugger
-console.log(raysuner.map([1,2,3,4,5], (a,b) => (a + b) % 2 === 0));
+console.log(raysuner.map([1, 2, 3, 4, 5], (a, b) => (a + b) % 2 === 0));
 // console.log(raysuner.map(users, "user"));
 // raysuner.sortBy(users1, (a, b) => a.user - b.user);
 // raysuner.sortBy(users1, (a, b) => a.age - b.age);
 // console.log(users1);
+console.log(raysuner.map([{ a: { b: 1 } }, { a: { b: 2 } }], "a.b"));
