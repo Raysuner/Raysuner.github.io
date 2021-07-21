@@ -307,9 +307,9 @@ var raysuner = {
         const arr = []
         for (let i = 0; i < array.length; i++) {
             if (raysuner.predicate(array[i], callback)) {
-                arr.push(array[i])
-            } else {
                 break
+            } else {
+                arr.push(array[i])
             }
         }
         return arr
@@ -332,9 +332,9 @@ var raysuner = {
         const arr = []
         for (let i = 0; i < array.length - 1; i++) {
             if (raysuner.predicate(array[i], callback)) {
-                arr.push(array[i])
-            } else {
                 break
+            } else {
+                arr.push(array[i])
             }
         }
         return arr
