@@ -243,17 +243,18 @@ var raysuner = {
         return arr
     },
 
-    differenceBy: function (array, values, callback = null) {
+    differenceBy: function (array, values, callback) {
         if (!Array.isArray(array)) {
             return []
         } else if (arguments.length === 2) {
             return raysuner.difference(array, values)
-        } else if (arguments.length > 2) {
-            j
-        }
-        if (Array.isArray(callback)) {
-            values = raysuner.concat(values, callback)
-            return raysuner.difference(array, values)
+        } else {
+            if (Array.isArray(arguments[arguments.length - 1])) {
+                for (let i = 0; i < arguments.length; i++) {
+                    values = raysuner.concat(values, arguments[i])
+                }
+                return raysuner.difference(array, values)
+            }
         }
         let set = {}
         let key
@@ -342,13 +343,13 @@ var raysuner = {
     dropRightWhile: function (array, callback) {
         const arr = []
         let i
-        for (i = 0; i < array.length; i++) {
+        for (i = array.length - 1; i >= 0; i--) {
             if (!raysuner.predicate(array[i], callback)) {
                 break
             }
         }
 
-        for (let j = i; j < array.length; j++) {
+        for (let j = 0; j <= i; j++) {
             arr.push(array[j])
         }
         return arr
@@ -628,3 +629,28 @@ var raysuner = {
         return array
     },
 }
+
+var users = [
+    { user: "barney", active: true },
+    { user: "fred", active: false },
+    { user: "pebbles", active: false },
+]
+
+// console.log(
+//     raysuner.dropRightWhile(users, function (o) {
+//         return !o.active
+//     })
+// )
+// // => objects for ['barney']
+
+// // The `_.matches` iteratee shorthand.
+// console.log(raysuner.dropRightWhile(users, { user: "pebbles", active: false }))
+// // => objects for ['barney', 'fred']
+
+// // The `_.matchesProperty` iteratee shorthand.
+// console.log(raysuner.dropRightWhile(users, ["active", false]))
+// // => objects for ['barney']
+
+// // The `_.property` iteratee shorthand.
+// console.log(raysuner.dropRightWhile(users, "active"))
+// // => objects for ['barney', 'fred', 'pebbles']
