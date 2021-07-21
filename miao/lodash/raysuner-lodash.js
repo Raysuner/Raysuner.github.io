@@ -11,6 +11,7 @@ var raysuner = {
         }
         return key
     },
+
     getValue: function (item, callback) {
         let value
         if (typeof callback === "function") {
@@ -72,6 +73,23 @@ var raysuner = {
         }
         return array
     },
+    isEqualForObject(obj1, obj2) {
+        if (
+            raysuner.getType(obj1) !== "object" ||
+            raysuner.getType(obj2) !== "object"
+        ) {
+            throw new Error("this function is for object")
+        }
+        if (obj1.length !== obj2.length) {
+            return false
+        }
+        for (let key in obj1) {
+            if (obj1[key] !== obj2[key]) {
+                return false
+            }
+        }
+        return true
+    },
 
     originalArrayForEach: function (collection, callback) {
         for (let i = 0; i < collection.length; i++) {
@@ -130,7 +148,7 @@ var raysuner = {
         }
     },
 
-    baseFindLast: function (collection, callback, fromIndex) {
+    baseFindLaslt: function (collection, callback, fromIndex) {
         for (let i = collection.length - 1 - fromIndex; i >= 0; i--) {
             if (raysuner.predicate(collection[i], callback)) {
                 return collection[i]
@@ -199,7 +217,6 @@ var raysuner = {
         }
         return arr
     },
-
     difference: function (array, ...values) {
         if (!Array.isArray(array)) {
             return []
@@ -224,7 +241,6 @@ var raysuner = {
         }
         return arr
     },
-
     differenceBy: function (array, values, callback = null) {
         if (!Array.isArray(array)) {
             return []
@@ -258,6 +274,164 @@ var raysuner = {
             }
         }
         return arr
+    },
+    differenceWith: function (array, values, callback) {
+        const arr = []
+        if (Array.isArray(array)) {
+            for (let item of values) {
+                for (let it of array) {
+                    if ((it, item)) {
+                        arr.push(it)
+                    }
+                }
+            }
+        }
+        return arr
+    },
+    drop: function (array, size = 0) {
+        if (size >= array.length) {
+            return []
+        }
+        if (size === 0) {
+            return array
+        }
+        const arr = []
+        for (let i = 0; i < array.length - size; i++) {
+            arr.push(array[i])
+        }
+        return arr
+    },
+    dropWhile: function (array, callback) {
+        const arr = []
+        for (let i = 0; i < array.length; i++) {
+            if (raysuner.predicate(array[i], callback)) {
+                arr.push(array[i])
+            }
+        }
+        return arr
+    },
+    dropRight: function (array, size = 0) {
+        if (size === 0) {
+            return array
+        }
+        if (size >= array.length) {
+            return []
+        }
+        const arr = []
+        for (let i = 0; i < array.length - size; i++) {
+            arr.push(array[i])
+        }
+        return arr
+    },
+    dropRightWhile: function (array, callback) {
+        const arr = []
+        for (let i = 0; i < array.length - 1; i++) {
+            if (raysuner.predicate(array[i + 1], callback)) {
+                arr.push(array[i])
+            } else {
+                return arr
+            }
+        }
+    },
+    fill: function (array, val, start = 0, end = array.length) {
+        for (let i = start; i < end; i++) {
+            array[i] = val
+        }
+    },
+    findIndex: function (array, callback, fromIndex = 0) {
+        for (let i = fromIndex; i < array.length; i++) {
+            if (raysuner.predicate(array[i], callback)) {
+                return i
+            }
+        }
+        return -1
+    },
+    findLastIndex: function (array, callback, fromIndex = array.length - 1) {
+        for (let i = fromIndex; i >= 0; i--) {
+            if (raysuner.predicate(array[i], callback)) {
+                return i
+            }
+        }
+        return -1
+    },
+    head: function (array) {
+        return array[0]
+    },
+
+    flatten: function (array) {
+        const arr = []
+        for (let item of array) {
+            arr = raysuner.concat(arr, item)
+        }
+        return arr
+    },
+    flatten: function (array) {
+        const arr = []
+        for (let item of array) {
+            arr = raysuner.concat(arr, item)
+        }
+        return arr
+    },
+
+    flattenDeep: function (array) {
+        function deep(array) {
+            for (let item of array) {
+                if (Array.isArray(item)) {
+                    deep(item)
+                } else {
+                    arr.push(item)
+                }
+            }
+        }
+        const arr = []
+        deep(array)
+        return arr
+    },
+
+    flattenDepth: function (array, depth = 1) {
+        function deep(array, depth) {
+            for (let item of array) {
+                if (Array.isArray(item) && depth) {
+                    deep(item, depth - 1)
+                } else {
+                    arr.push(item)
+                }
+            }
+        }
+        const arr = []
+        deep(array, depth)
+        return arr
+    },
+
+    fromPair: function (array) {
+        const obj = {}
+        for (let item of array) {
+            obj[item[0]] = item[1]
+        }
+        return obj
+    },
+
+    indexOf: function (array, val, fromIndex = 0) {
+        for (let i = fromIndex; i < array.length; i++) {
+            if (array[i] === val || (isNaN(array[i]) && isNaN(val))) {
+                return i
+            }
+        }
+        return -1
+    },
+
+    initial: function (array) {
+        const arr = []
+        for (let i = 0; i < array.length - 1; i++) {
+            arr.push(array[i])
+        }
+        return arr
+    },
+
+    intersection: function (...arrays) {
+        const arr = []
+        for (let array of arrays) {
+        }
     },
 
     /*
@@ -427,7 +601,6 @@ var raysuner = {
         }
         return s
     },
-
     split: function (str, separator, len = Infinity) {
         const array = []
         for (let i = 0, j = 0; j <= str.length && array.length < len; ) {
@@ -463,10 +636,10 @@ var users3 = [
 ]
 
 // console.log(raysuner.chunk([1, 2, 3], 2));
-console.log(raysuner.difference([1, 2, 3], [4, 2], 1, [1]))
-console.log(raysuner.differenceBy([1, 2, 3], [4, 2]))
-console.log(raysuner.differenceBy([3.1, 2.2, 1.3], [4.4, 2.5], Math.floor))
-console.log(raysuner.differenceBy([{ x: 2 }, { x: 1, y: 1 }], [{ y: 1 }], "y"))
+// console.log(raysuner.difference([1, 2, 3], [4, 2], 1, [1]))
+// console.log(raysuner.differenceBy([1, 2, 3], [4, 2]))
+// console.log(raysuner.differenceBy([3.1, 2.2, 1.3], [4.4, 2.5], Math.floor))
+// console.log(raysuner.differenceBy([{ x: 2 }, { x: 1, y: 1 }], [{ y: 1 }], "y"))
 // raysuner.forEach([1, 2], (item) => {
 //     console.log(item);
 // });
@@ -530,12 +703,26 @@ console.log(raysuner.differenceBy([{ x: 2 }, { x: 1, y: 1 }], [{ y: 1 }], "y"))
 // console.log(raysuner.invokeMap([123, 456], String.prototype.split, ""));
 // console.log(raysuner.keyBy(users2, (o) => String.fromCharCode(o.code)));
 // console.log(raysuner.keyBy(users2, "dir"));
-// console.log(raysuner.map([2, 4], (x) => x * x));
-// console.log(raysuner.map({ a: 3, b: 9 }, (x) => x * x));
+// let user = [{ user: "barney" }, { user: "fred" }]
+// console.log(raysuner.map([4, 8], (x) => x * x))
+// console.log(raysuner.map({ a: 4, b: 8 }, (x) => x * x))
 // debugger
-console.log(raysuner.map([1, 2, 3, 4, 5], (a, b) => (a + b) % 2 === 0))
+// console.log(raysuner.map([1, 2, 3, 4, 5], (a, b) => (a + b) % 2 === 0))
 // console.log(raysuner.map(users, "user"));
 // raysuner.sortBy(users1, (a, b) => a.user - b.user);
 // raysuner.sortBy(users1, (a, b) => a.age - b.age);
 // console.log(users1);
-console.log(raysuner.map([{ a: { b: 1 } }, { a: { b: 2 } }], "a.b"))
+// console.log(raysuner.map([{ a: { b: 1 } }, { a: { b: 2 } }], "a.b"))
+// console.log(raysuner.map(user, "user"))
+var objects = [
+    { x: 1, y: 2 },
+    { x: 2, y: 1 },
+]
+
+// console.log(
+//     raysuner.differenceWith(
+//         objects,
+//         [{ x: 1, y: 2 }],
+//         raysuner.isEqualForObject
+//     )
+// )
