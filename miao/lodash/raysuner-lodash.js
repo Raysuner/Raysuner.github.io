@@ -73,7 +73,8 @@ var raysuner = {
         }
         return array
     },
-    isEqualForObject(obj1, obj2) {
+
+    isEqualForObject: function (obj1, obj2) {
         if (
             raysuner.getType(obj1) !== "object" ||
             raysuner.getType(obj2) !== "object"
@@ -245,7 +246,8 @@ var raysuner = {
         if (!Array.isArray(array)) {
             return []
         }
-        if (!callback) {
+        if (Array.isArray(callback)) {
+            values = raysuner.concat(values, callback)
             return raysuner.difference(array, values)
         }
         let set = {}
@@ -288,7 +290,7 @@ var raysuner = {
         }
         return arr
     },
-    drop: function (array, size = 0) {
+    drop: function (array, size = 1) {
         if (size >= array.length) {
             return []
         }
@@ -296,7 +298,7 @@ var raysuner = {
             return array
         }
         const arr = []
-        for (let i = 0; i < array.length - size; i++) {
+        for (let i = size; i < array.length; i++) {
             arr.push(array[i])
         }
         return arr
@@ -306,11 +308,14 @@ var raysuner = {
         for (let i = 0; i < array.length; i++) {
             if (raysuner.predicate(array[i], callback)) {
                 arr.push(array[i])
+            } else {
+                break
             }
         }
         return arr
     },
-    dropRight: function (array, size = 0) {
+
+    dropRight: function (array, size = 1) {
         if (size === 0) {
             return array
         }
@@ -326,17 +331,19 @@ var raysuner = {
     dropRightWhile: function (array, callback) {
         const arr = []
         for (let i = 0; i < array.length - 1; i++) {
-            if (raysuner.predicate(array[i + 1], callback)) {
+            if (raysuner.predicate(array[i], callback)) {
                 arr.push(array[i])
             } else {
-                return arr
+                break
             }
         }
+        return arr
     },
     fill: function (array, val, start = 0, end = array.length) {
         for (let i = start; i < end; i++) {
             array[i] = val
         }
+        return array
     },
     findIndex: function (array, callback, fromIndex = 0) {
         for (let i = fromIndex; i < array.length; i++) {
@@ -359,14 +366,7 @@ var raysuner = {
     },
 
     flatten: function (array) {
-        const arr = []
-        for (let item of array) {
-            arr = raysuner.concat(arr, item)
-        }
-        return arr
-    },
-    flatten: function (array) {
-        const arr = []
+        let arr = []
         for (let item of array) {
             arr = raysuner.concat(arr, item)
         }
@@ -403,7 +403,7 @@ var raysuner = {
         return arr
     },
 
-    fromPair: function (array) {
+    fromPairs: function (array) {
         const obj = {}
         for (let item of array) {
             obj[item[0]] = item[1]
