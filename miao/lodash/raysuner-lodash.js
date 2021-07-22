@@ -218,14 +218,16 @@ var raysuner = {
         }
         return arr
     },
-    difference: function (array, values) {
+    difference: function (array, ...values) {
         if (!Array.isArray(array)) {
             return []
         }
         let set = {}
-        for (let item of values) {
-            if (!(item in set)) {
-                set[item] = true
+        for (let vals of values) {
+            for (let item of vals) {
+                if (!(item in set)) {
+                    set[item] = true
+                }
             }
         }
         const arr = []
@@ -293,7 +295,14 @@ var raysuner = {
                 callback = arguments[len - 1]
             }
         }
-        return raysuner.filter(array, (it) => !values.includes(it))
+        const arr = []
+        for (let i = 0; i < array.length; i++) {
+            for (let j = 0; j < values.length; j++) {
+                if (!callback(array[i], values[j])) {
+                    arr.push(array[i])
+                }
+            }
+        }
     },
 
     drop: function (array, size = 1) {
@@ -444,10 +453,39 @@ var raysuner = {
 
     intersection: function (...arrays) {
         const arr = []
-        for (let array of arrays) {
+        let first = arrays[0]
+        for (let item of first) {
+            for (let i = 1; i < arrays.length; i++) {}
         }
     },
 
+    join: function (array, separator) {
+        let str = "" + array[0]
+        for (let i = 1; i < array.length; i++) {
+            str += separator + array[i]
+        }
+        return str
+    },
+
+    last: function (array) {
+        return array[array.length - 1]
+    },
+
+    lastIndexOf: function (array, value, fromIndex = array.length - 1) {
+        for (let i = fromIndex; i >= 0; i--) {
+            if (value === array[i]) {
+                return i
+            }
+        }
+        return -1
+    },
+
+    nth: function (array, n = 0) {
+        while (n < 0) {
+            n += array.length
+        }
+        return array[n]
+    },
     /*
     集合
      */
@@ -634,11 +672,3 @@ var users = [
     { user: "fred", active: false },
     { user: "pebbles", active: false },
 ]
-
-console.log(raysuner.differenceBy([3.1, 2.2, 1.3], [4.4, 2.5], Math.floor))
-console.log(raysuner.differenceBy([1, 2, 3, 4, 5, 6], [1, 2], [3, 4]))
-debugger
-console.log(
-    raysuner.differenceBy([1, 2, 3, 4, 5, 6], [1, 2], [3, 4], (it) => it)
-)
-console.log(raysuner.differenceBy([{ x: 2 }, { x: 1 }], [{ x: 1 }], "x"))
