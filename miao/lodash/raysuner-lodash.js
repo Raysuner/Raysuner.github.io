@@ -455,14 +455,23 @@ var raysuner = {
         const arr = []
         let first = arrays[0]
         for (let item of first) {
-            for (let i = 1; i < arrays.length; i++) {}
+            let flag = true
+            for (let i = 1; i < arrays.length; i++) {
+                if (!arrays[i].includes(item)) {
+                    flag = false
+                    break
+                }
+            }
+            if (flag) {
+                arr.push(item)
+            }
         }
     },
 
     join: function (array, separator) {
         let str = "" + array[0]
         for (let i = 1; i < array.length; i++) {
-            str += separator + array[i]
+            str += String(separator) + array[i]
         }
         return str
     },
@@ -481,9 +490,7 @@ var raysuner = {
     },
 
     nth: function (array, n = 0) {
-        while (n < 0) {
-            n += array.length
-        }
+        n += array.length
         return array[n]
     },
     /*
