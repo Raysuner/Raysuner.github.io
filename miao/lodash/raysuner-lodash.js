@@ -218,18 +218,12 @@ var raysuner = {
         }
         return arr
     },
-    difference: function (array, ...values) {
+    difference: function (array, values) {
         if (!Array.isArray(array)) {
             return []
         }
-        let filter = []
-        for (let item of values) {
-            if (Array.isArray(item)) {
-                filter = raysuner.concat(filter, item)
-            }
-        }
         let set = {}
-        for (let item of filter) {
+        for (let item of values) {
             if (!(item in set)) {
                 set[item] = true
             }
@@ -248,12 +242,17 @@ var raysuner = {
             return []
         } else if (arguments.length === 2) {
             return raysuner.difference(array, values)
-        } else {
+        } else if (arguments.length > 2) {
             if (Array.isArray(arguments[arguments.length - 1])) {
-                for (let i = 0; i < arguments.length; i++) {
+                for (let i = 2; i < arguments.length; i++) {
                     values = raysuner.concat(values, arguments[i])
                 }
                 return raysuner.difference(array, values)
+            } else {
+                for (let i = 2; i < arguments.length - 1; i++) {
+                    values = raysuner.concat(values, arguments[i])
+                    callback = arguments[arguments.length - 1]
+                }
             }
         }
         let set = {}
@@ -285,17 +284,16 @@ var raysuner = {
     },
 
     differenceWith: function (array, values, callback) {
-        const arr = []
-        if (Array.isArray(array)) {
-            for (let item of values) {
-                for (let it of array) {
-                    if ((it, item)) {
-                        arr.push(it)
-                    }
-                }
+        if (!Array.isArray(array)) {
+            return []
+        } else if (arguments.length > 2) {
+            let len = arguments.length
+            for (let i = 2; i < len - 1; i++) {
+                values = raysuner.concat(values, arguments[i])
+                callback = arguments[len - 1]
             }
         }
-        return arr
+        return raysuner.filter(array, (it) => !values.includes(it))
     },
 
     drop: function (array, size = 1) {
@@ -617,6 +615,7 @@ var raysuner = {
         }
         return s
     },
+
     split: function (str, separator, len = Infinity) {
         const array = []
         for (let i = 0, j = 0; j <= str.length && array.length < len; ) {
@@ -636,21 +635,10 @@ var users = [
     { user: "pebbles", active: false },
 ]
 
-// console.log(
-//     raysuner.dropRightWhile(users, function (o) {
-//         return !o.active
-//     })
-// )
-// // => objects for ['barney']
-
-// // The `_.matches` iteratee shorthand.
-// console.log(raysuner.dropRightWhile(users, { user: "pebbles", active: false }))
-// // => objects for ['barney', 'fred']
-
-// // The `_.matchesProperty` iteratee shorthand.
-// console.log(raysuner.dropRightWhile(users, ["active", false]))
-// // => objects for ['barney']
-
-// // The `_.property` iteratee shorthand.
-// console.log(raysuner.dropRightWhile(users, "active"))
-// // => objects for ['barney', 'fred', 'pebbles']
+console.log(raysuner.differenceBy([3.1, 2.2, 1.3], [4.4, 2.5], Math.floor))
+console.log(raysuner.differenceBy([1, 2, 3, 4, 5, 6], [1, 2], [3, 4]))
+debugger
+console.log(
+    raysuner.differenceBy([1, 2, 3, 4, 5, 6], [1, 2], [3, 4], (it) => it)
+)
+console.log(raysuner.differenceBy([{ x: 2 }, { x: 1 }], [{ x: 1 }], "x"))
