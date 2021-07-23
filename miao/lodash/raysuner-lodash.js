@@ -303,6 +303,7 @@ var raysuner = {
                 }
             }
         }
+        return arr
     },
 
     drop: function (array, size = 1) {
@@ -466,6 +467,7 @@ var raysuner = {
                 arr.push(item)
             }
         }
+        return arr
     },
 
     join: function (array, separator) {
@@ -490,7 +492,7 @@ var raysuner = {
     },
 
     nth: function (array, n = 0) {
-        n += array.length
+        n = n < 0 ? n + array.length : n
         return array[n]
     },
     /*
